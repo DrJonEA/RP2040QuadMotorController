@@ -60,11 +60,13 @@ int main( void )
 			MTR4_ENC_B
 			);
 
+    /*
     motors[0].throttle16(35000);
     for (;;){
     	printf("%.2f RadsPS\n", motors[0].getRADPS());
     	sleep_ms(1000);
     }
+    */
 
 	for (;;){
 		for (int i=0xFFFF; i > 15000; i-=5000){

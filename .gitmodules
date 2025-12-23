@@ -1,0 +1,3 @@
+[submodule "lib/AutoTunePID"]
+	path = lib/AutoTunePID
+	url = https://github.com/lily-osp/AutoTunePID
