@@ -11,6 +11,13 @@
 #include "Motor.h"
 #include "AutoTunePID.h"
 
+#ifndef PID_FAULT_PER //Percentage error places drive into fault mode
+#define PID_FAULT_PER 0.2
+#endif
+
+#ifndef PID_FAULT_TIME //Time to allow drive to achieve speed in ms
+#define PID_FAULT_TIME 1000
+#endif
 
 class MotorAutoPid : public Motor {
 public:
@@ -33,12 +40,19 @@ public:
 	void tunePID();
 	bool tuneComplete();
 
+	bool isFault();
+	void reseFault();
+
 protected:
+	void setFault();
 
 	float xTargetRadPS = 0.0;
 	AutoTunePID *pPID;
 
 	void pidInit();
+
+	uint32_t xOkTimestamp = 0;
+	bool xFault = false;
 };
 
 #endif /* EXP_PID_SRC_MOTORAUTOPID_H_ */

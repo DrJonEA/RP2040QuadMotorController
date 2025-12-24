@@ -370,10 +370,15 @@ int main(){
 	    for (;;){
 		    for (int i=0; i < 4; i++){
 		    	motors[i].doPID();
-		    	printf("%d: %.2f == %.2f\n",
+		    	printf("%d: %.2f == %.2f ",
 		    			i,
 						motors[i].getTargetSpeedRadPS(),
 						motors[i].getRADPS());
+		    	if (motors[i].isFault()){
+		    		printf("FAULT\n");
+		    	} else {
+		    		printf("OK\n");
+		    	}
 		    }
 		    sleep_ms(100);
 	    }

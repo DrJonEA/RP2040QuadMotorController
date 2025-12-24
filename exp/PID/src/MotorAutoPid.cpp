@@ -46,6 +46,7 @@ void MotorAutoPid::setSpeedRadPS(float rps, bool cw){
 	setClockwise(cw);
 
 	pPID->setSetpoint(xTargetRadPS);
+	xOkTimestamp = to_ms_since_boot (get_absolute_time());
 }
 
 void MotorAutoPid::configPID(float kP, float kI, float kD){
@@ -57,7 +58,33 @@ void MotorAutoPid::configPID(float kP, float kI, float kD){
 
 float MotorAutoPid::doPID(){
 
-	pPID->update(getRADPS());
+	if (xFault){
+		return -1.0;
+	}
+	float current =getRADPS();
+
+	if (pPID->getOperationalMode() != OperationalMode::Tune){
+
+		float perError = current / xTargetRadPS;
+		if (perError > 1.0){
+			perError = perError - 1.0;
+		} else {
+			perError = 1.0 - perError;
+		}
+		uint32_t now = to_ms_since_boot (get_absolute_time());
+		printf("Error %.2f\n", perError);
+		if (perError > PID_FAULT_PER) {
+			uint32_t ms = now - xOkTimestamp;
+			if (ms > PID_FAULT_TIME){
+				setFault();
+				return -1.0;
+			}
+		} else {
+			xOkTimestamp = now;
+		}
+	}
+
+	pPID->update(current);
 	float throttle = pPID->getOutput();
 	setThrottle(throttle, isClockwise());
 	return throttle;
@@ -80,5 +107,17 @@ void MotorAutoPid::tunePID(){
 
 bool MotorAutoPid::tuneComplete(){
 	return  (pPID->getOperationalMode() == OperationalMode::Normal);
+}
+
+bool MotorAutoPid::isFault(){
+	return xFault;
+}
+void MotorAutoPid::reseFault(){
+	xFault = false;
+}
+void MotorAutoPid::setFault(){
+	xFault = true;
+	setSpeedRadPS(0.0, true);
+	setThrottle(0, true);
 }
 
