@@ -142,6 +142,11 @@ float Motor::getRADPS(){
 
 	 xLastTime = now;
 	 float rad = (float)count / (float)MOTOR_ROTATION * 2.0 * M_PI;
+	 if (xCW){
+		 xRadPos += rad;
+	 } else {
+		 xRadPos -= rad;
+	 }
 	 xRPS = rad / (ms / 1000.0);
 	 //printf("Count %u, %u ms, %f rad, %f rps\n", count, ms, rad, xRPS);
 	 return xRPS;
@@ -177,3 +182,10 @@ void Motor::setClockwise(bool cw ){
 	}
 }
 
+float Motor::getDeltaRad(bool reset){
+	float res = xRadPos;
+	if (reset){
+		xRadPos = 0.0;
+	}
+	return res;
+}

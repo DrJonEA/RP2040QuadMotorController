@@ -53,6 +53,8 @@ protected:
 
 	uint32_t xOkTimestamp = 0;
 	bool xFault = false;
+
+
 };
 
 #endif /* EXP_PID_SRC_MOTORAUTOPID_H_ */

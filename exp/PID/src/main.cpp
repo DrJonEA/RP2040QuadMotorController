@@ -358,22 +358,24 @@ int main(){
 	    }
 
 	    for (int i=0; i < 4; i++){
-	    	if (i/2 == 0){
+	    	if (i  >=2){
 	    		motors[i].setSpeedRadPS(M_PI*4, true);
 	    	} else {
-	    		motors[i].setSpeedRadPS(M_PI*4, true);
+	    		motors[i].setSpeedRadPS(M_PI*4, false);
 	    	}
 	    	float kp, ki, kd;
 	    	motors[i].getKPID(kp, ki, kd);
 			printf("Motor %d PID(%f, %f, %f)\n",i, kp, ki, kd);
 	    }
+
 	    for (;;){
 		    for (int i=0; i < 4; i++){
 		    	motors[i].doPID();
-		    	printf("%d: %.2f == %.2f ",
+		    	printf("%d: %.2f == %.2f, %.2f ",
 		    			i,
 						motors[i].getTargetSpeedRadPS(),
-						motors[i].getRADPS());
+						motors[i].getRADPS(),
+						motors[i].getDeltaRad());
 		    	if (motors[i].isFault()){
 		    		printf("FAULT\n");
 		    	} else {

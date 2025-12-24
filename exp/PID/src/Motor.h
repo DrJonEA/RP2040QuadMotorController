@@ -44,6 +44,7 @@ public:
 	bool isClockwise();
 	void setClockwise(bool cw = true);
 
+	float getDeltaRad(bool reset = true);
 
 private:
 	void  initCW();
@@ -61,6 +62,8 @@ private:
 	float xThrottle = 0.0;
 	float xRPS = 0.0;
 	bool xCW;
+
+	float xRadPos = 0.0;
 };
 
 #endif /* EXP_SRC_MOTOR_H_ */
